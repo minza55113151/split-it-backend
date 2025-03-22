@@ -45,8 +45,8 @@ func authMiddleware(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString("Internal Server Error - User ID not found")
 	}
 
-	fmt.Println(usr.ID)
-	c.Locals(models.UserIdContextKey, usr.ID)
+	fmt.Println(usr.ID) // TODO: remove this
+	c.Locals(models.SubIDContextKey, usr.ID)
 
 	return c.Next()
 }

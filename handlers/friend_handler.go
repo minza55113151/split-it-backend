@@ -10,6 +10,7 @@ func NewFriendHandler() *FriendHandler {
 	return &FriendHandler{}
 }
 
-func (h *FriendHandler) AddFriend(c *fiber.Ctx) error {
-	return c.SendStatus(fiber.StatusNoContent)
+func (h *FriendHandler) HandleGetFriends(c *fiber.Ctx) error {
+
+	return nil
 }

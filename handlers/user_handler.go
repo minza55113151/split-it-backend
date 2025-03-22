@@ -26,9 +26,9 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 // @Failure 500 {string} string "Internal server error"
 // @Router /users [get]
 func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
-	uid := c.Locals(models.UserIdContextKey).(string)
+	subID := c.Locals(models.SubIDContextKey).(string)
 
-	user, err := h.UserService.GetUserByUID(uid)
+	user, err := h.UserService.GetUserBySubID(subID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
 	}
@@ -49,9 +49,9 @@ func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 // @Failure 500 {string} string "Internal server error"
 // @Router /users [post]
 func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
-	uid := c.Locals(models.UserIdContextKey).(string)
+	subID := c.Locals(models.SubIDContextKey).(string)
 
-	user, err := h.UserService.CreateUser(uid)
+	user, err := h.UserService.CreateUser(subID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
 	}

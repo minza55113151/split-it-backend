@@ -13,9 +13,9 @@ func NewUserService(repo *repositories.UserRepository) *UserService {
 	return &UserService{repo: repo}
 }
 
-func (s *UserService) CreateUser(uid string) (*models.User, error) {
+func (s *UserService) CreateUser(subID string) (*models.User, error) {
 	user := &models.User{
-		UID: uid,
+		SubID: subID,
 	}
 
 	res, err := s.repo.CreateUser(user)
@@ -26,24 +26,10 @@ func (s *UserService) CreateUser(uid string) (*models.User, error) {
 	return res, nil
 }
 
-func (s *UserService) GetUserByUID(uid string) (*models.User, error) {
-	user, err := s.repo.GetUserByUID(uid)
+func (s *UserService) GetUserBySubID(subID string) (*models.User, error) {
+	user, err := s.repo.GetUserBySubID(subID)
 	if err != nil {
 		return nil, err
 	}
 	return user, nil
-}
-
-func (s *UserService) UpdateUser(user *models.User) error {
-	if err := s.repo.UpdateUser(user); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (s *UserService) DeleteUser(id string) error {
-	if err := s.repo.DeleteUser(id); err != nil {
-		return err
-	}
-	return nil
 }

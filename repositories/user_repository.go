@@ -23,27 +23,13 @@ func (r *UserRepository) CreateUser(user *models.User) (*models.User, error) {
 	return user, nil
 }
 
-func (r *UserRepository) GetUserByUID(uid string) (*models.User, error) {
+func (r *UserRepository) GetUserBySubID(subID string) (*models.User, error) {
 	var user models.User
-	if err := r.db.First(&user, "uid = ?", uid).Error; err != nil {
+	if err := r.db.First(&user, "sub_id = ?", subID).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, err
 	}
 	return &user, nil
-}
-
-func (r *UserRepository) UpdateUser(user *models.User) error {
-	if err := r.db.Save(user).Error; err != nil {
-		return err
-	}
-	return nil
-}
-
-func (r *UserRepository) DeleteUser(id string) error {
-	if err := r.db.Delete(&models.User{}, "id = ?", id).Error; err != nil {
-		return err
-	}
-	return nil
 }

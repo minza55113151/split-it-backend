@@ -5,5 +5,5 @@ const (
 	AppName    = "SplitIt"
 	AppVersion = "1.0.0"
 
-	UserIdContextKey = "user-id"
+	SubIDContextKey = "sub-id"
 )

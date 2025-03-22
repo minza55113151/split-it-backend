@@ -27,9 +27,12 @@ func main() {
 
 	userRepo := repositories.NewUserRepository(db)
 	// friendRepo := repositories.NewFriendRepository(db)
+
 	userService := services.NewUserService(userRepo)
 	// friendService := services.NewFriendService(friendRepo)
+
 	userHandler := handlers.NewUserHandler(userService)
+	// friendHandler := handlers.NewFriendHandler(friendService)
 
 	app.Get("/swagger/*", swagger.New(swagger.Config{
 		PersistAuthorization: true,
