@@ -11,11 +11,19 @@ import (
 	"github.com/gofiber/swagger"
 )
 
+// @title Split-It API
+// @description This is a sample server for the Split-It application.
+// @version 1.0
+// @schemes http
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 
 	app := fiber.New()
 
-	db := InitDB()
+	db := initDB()
+	initAuth()
 
 	userRepo := repositories.NewUserRepository(db)
 	// friendRepo := repositories.NewFriendRepository(db)
@@ -23,10 +31,14 @@ func main() {
 	// friendService := services.NewFriendService(friendRepo)
 	userHandler := handlers.NewUserHandler(userService)
 
-	app.Get("/users/:uid", userHandler.HandleGetUser)
-	app.Post("/users", userHandler.HandleCreateUser)
+	app.Get("/swagger/*", swagger.New(swagger.Config{
+		PersistAuthorization: true,
+	}))
 
-	app.Get("/swagger/*", swagger.HandlerDefault) // default
+	authGroup := app.Group("")
+	authGroup.Use(authMiddleware)
+	authGroup.Get("/users", userHandler.HandleGetUser)
+	authGroup.Post("/users", userHandler.HandleCreateUser)
 
-	app.Listen(":3000")
+	app.Listen(":8000")
 }

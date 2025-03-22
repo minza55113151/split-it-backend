@@ -15,18 +15,18 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 	return &UserHandler{UserService: userService}
 }
 
-// @Summary Get a user by UID
-// @Description Get user details by user UID
+// @Summary Get a user
+// @Description Get user details
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param uid path string true "User ID"
+// @Security ApiKeyAuth
 // @Success 200 {object} models.User
 // @Failure 404 {string} string "User not found"
 // @Failure 500 {string} string "Internal server error"
-// @Router /users/{uid} [get]
+// @Router /users [get]
 func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
-	uid := c.Params("uid")
+	uid := c.Locals(models.UserIdContextKey).(string)
 
 	user, err := h.UserService.GetUserByUID(uid)
 	if err != nil {
@@ -40,22 +40,18 @@ func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 }
 
 // @Summary Create a new user
-// @Description Create a new user with the provided details
+// @Description Create a new user
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param user body models.CreateUserModel true "User details"
+// @Security ApiKeyAuth
 // @Success 201 {object} models.User
-// @Failure 400 {string} string "Bad request"
 // @Failure 500 {string} string "Internal server error"
 // @Router /users [post]
 func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
-	var createUser models.CreateUserModel
-	if err := c.BodyParser(&createUser); err != nil {
-		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
-	}
+	uid := c.Locals(models.UserIdContextKey).(string)
 
-	user, err := h.UserService.CreateUser(createUser.UID)
+	user, err := h.UserService.CreateUser(uid)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
 	}

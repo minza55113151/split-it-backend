@@ -1,9 +1,4 @@
 definitions:
-  models.CreateUserModel:
-    properties:
-      uid:
-        type: string
-    type: object
   models.User:
     properties:
       createdAt:
@@ -17,48 +12,15 @@ definitions:
     type: object
 info:
   contact: {}
+  description: This is a sample server for the Split-It application.
+  title: Split-It API
+  version: "1.0"
 paths:
   /users:
-    post:
-      consumes:
-      - application/json
-      description: Create a new user with the provided details
-      parameters:
-      - description: User details
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/models.CreateUserModel'
-      produces:
-      - application/json
-      responses:
-        "201":
-          description: Created
-          schema:
-            $ref: '#/definitions/models.User'
-        "400":
-          description: Bad request
-          schema:
-            type: string
-        "500":
-          description: Internal server error
-          schema:
-            type: string
-      summary: Create a new user
-      tags:
-      - users
-  /users/{id}:
     get:
       consumes:
       - application/json
-      description: Get user details by user ID
-      parameters:
-      - description: User ID
-        in: path
-        name: id
-        required: true
-        type: string
+      description: Get user details
       produces:
       - application/json
       responses:
@@ -74,7 +36,36 @@ paths:
           description: Internal server error
           schema:
             type: string
-      summary: Get a user by ID
+      security:
+      - ApiKeyAuth: []
+      summary: Get a user
       tags:
       - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new user
+      tags:
+      - users
+schemes:
+- http
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
