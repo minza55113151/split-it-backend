@@ -26,13 +26,13 @@ func main() {
 	initAuth()
 
 	userRepo := repositories.NewUserRepository(db)
-	// friendRepo := repositories.NewFriendRepository(db)
+	friendRepo := repositories.NewFriendRepository(db)
 
 	userService := services.NewUserService(userRepo)
-	// friendService := services.NewFriendService(friendRepo)
+	friendService := services.NewFriendService(friendRepo)
 
 	userHandler := handlers.NewUserHandler(userService)
-	// friendHandler := handlers.NewFriendHandler(friendService)
+	friendHandler := handlers.NewFriendHandler(friendService)
 
 	app.Get("/swagger/*", swagger.New(swagger.Config{
 		PersistAuthorization: true,
@@ -40,8 +40,13 @@ func main() {
 
 	authGroup := app.Group("")
 	authGroup.Use(authMiddleware)
+
 	authGroup.Get("/users", userHandler.HandleGetUser)
 	authGroup.Post("/users", userHandler.HandleCreateUser)
+
+	authGroup.Get("/friends", friendHandler.HandleGetFriends)
+	authGroup.Post("/friends/:subID", friendHandler.HandleCreateFriend)
+	authGroup.Delete("/friends/:subID", friendHandler.HandleDeleteFriend)
 
 	app.Listen(":8000")
 }

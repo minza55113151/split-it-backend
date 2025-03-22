@@ -98,7 +98,7 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "uid": {
+                "subID": {
                     "type": "string"
                 },
                 "updatedAt": {

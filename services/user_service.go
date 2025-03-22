@@ -6,11 +6,11 @@ import (
 )
 
 type UserService struct {
-	repo *repositories.UserRepository
+	userRepo *repositories.UserRepository
 }
 
 func NewUserService(repo *repositories.UserRepository) *UserService {
-	return &UserService{repo: repo}
+	return &UserService{userRepo: repo}
 }
 
 func (s *UserService) CreateUser(subID string) (*models.User, error) {
@@ -18,7 +18,7 @@ func (s *UserService) CreateUser(subID string) (*models.User, error) {
 		SubID: subID,
 	}
 
-	res, err := s.repo.CreateUser(user)
+	res, err := s.userRepo.CreateUser(user)
 	if err != nil {
 		return nil, err
 	}
@@ -27,7 +27,7 @@ func (s *UserService) CreateUser(subID string) (*models.User, error) {
 }
 
 func (s *UserService) GetUserBySubID(subID string) (*models.User, error) {
-	user, err := s.repo.GetUserBySubID(subID)
+	user, err := s.userRepo.GetUserBySubID(subID)
 	if err != nil {
 		return nil, err
 	}
