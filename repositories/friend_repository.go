@@ -35,5 +35,7 @@ func (r *FriendRepository) CreateFriend(subID1, subID2 string) error {
 }
 
 func (r *FriendRepository) DeleteFriend(subID1, subID2 string) error {
+	subID1, subID2 = min(subID1, subID2), max(subID1, subID2)
+
 	return r.db.Where("sub_id1 = ? AND sub_id2 = ?", subID1, subID2).Delete(&models.Friend{}).Error
 }

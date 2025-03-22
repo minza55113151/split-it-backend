@@ -1,4 +1,19 @@
 definitions:
+  models.Friend:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      subID1:
+        type: string
+      subID2:
+        type: string
+      updatedAt:
+        type: string
+    type: object
   models.User:
     properties:
       createdAt:
@@ -16,6 +31,82 @@ info:
   title: Split-It API
   version: "1.0"
 paths:
+  /friends:
+    get:
+      consumes:
+      - application/json
+      description: Get friends
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Friend'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get friends
+      tags:
+      - friends
+  /friends/{subID}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete friend
+      parameters:
+      - description: Friend subID
+        in: path
+        name: subID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete friend
+      tags:
+      - friends
+    post:
+      consumes:
+      - application/json
+      description: Create friend
+      parameters:
+      - description: Friend subID
+        in: path
+        name: subID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create friend
+      tags:
+      - friends
   /users:
     get:
       consumes:
