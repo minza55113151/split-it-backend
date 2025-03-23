@@ -8,11 +8,11 @@ import (
 )
 
 type FriendHandler struct {
-	FriendService *services.FriendService
+	friendService *services.FriendService
 }
 
 func NewFriendHandler(friendService *services.FriendService) *FriendHandler {
-	return &FriendHandler{FriendService: friendService}
+	return &FriendHandler{friendService: friendService}
 }
 
 // @Summary Get friends
@@ -27,7 +27,7 @@ func NewFriendHandler(friendService *services.FriendService) *FriendHandler {
 func (h *FriendHandler) HandleGetFriends(c *fiber.Ctx) error {
 	subID := c.Locals(models.SubIDContextKey).(string)
 
-	friends, err := h.FriendService.GetFriends(subID)
+	friends, err := h.friendService.GetFriends(subID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
 	}
@@ -49,7 +49,7 @@ func (h *FriendHandler) HandleCreateFriend(c *fiber.Ctx) error {
 	subID := c.Locals(models.SubIDContextKey).(string)
 	friendSubID := c.Params("subID")
 
-	err := h.FriendService.CreateFriend(subID, friendSubID)
+	err := h.friendService.CreateFriend(subID, friendSubID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
 	}
@@ -71,7 +71,7 @@ func (h *FriendHandler) HandleDeleteFriend(c *fiber.Ctx) error {
 	subID := c.Locals(models.SubIDContextKey).(string)
 	friendSubID := c.Params("subID")
 
-	err := h.FriendService.DeleteFriend(subID, friendSubID)
+	err := h.friendService.DeleteFriend(subID, friendSubID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
 	}
