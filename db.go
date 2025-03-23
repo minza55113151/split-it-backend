@@ -33,9 +33,11 @@ func initDB() *gorm.DB {
 
 	db.Migrator().DropTable(&models.User{})
 	db.Migrator().DropTable(&models.Friend{})
+	db.Migrator().DropTable(&models.Expense{})
 
 	db.AutoMigrate(&models.User{})
 	db.AutoMigrate(&models.Friend{})
+	db.AutoMigrate(&models.Expense{})
 
 	return db
 }

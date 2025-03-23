@@ -27,12 +27,15 @@ func main() {
 
 	userRepo := repositories.NewUserRepository(db)
 	friendRepo := repositories.NewFriendRepository(db)
+	expenseRepo := repositories.NewExpenseRepository(db)
 
 	userService := services.NewUserService(userRepo)
 	friendService := services.NewFriendService(friendRepo)
+	expenseService := services.NewExpenseService(expenseRepo)
 
 	userHandler := handlers.NewUserHandler(userService)
 	friendHandler := handlers.NewFriendHandler(friendService)
+	expenseHandler := handlers.NewExpenseHandler(expenseService)
 
 	app.Get("/swagger/*", swagger.New(swagger.Config{
 		PersistAuthorization: true,
@@ -47,6 +50,11 @@ func main() {
 	authGroup.Get("/friends", friendHandler.HandleGetFriends)
 	authGroup.Post("/friends/:subID", friendHandler.HandleCreateFriend)
 	authGroup.Delete("/friends/:subID", friendHandler.HandleDeleteFriend)
+
+	authGroup.Get("/expenses/:status", expenseHandler.HandleGetUserExpensesWithStatus)
+	authGroup.Post("/expenses", expenseHandler.HandleCreateExpense)
+	authGroup.Put("/expenses/:id", expenseHandler.HandleUpdateExpense)
+	authGroup.Delete("/expenses/:id", expenseHandler.HandleDeleteExpense)
 
 	app.Listen(":8000")
 }
