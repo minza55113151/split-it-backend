@@ -5,15 +5,16 @@ import (
 	"os"
 	"split-it/models"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func initDB() *gorm.DB {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatalf("Error loading .env file: %v", err)
-	// }
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
 
 	dsn := os.Getenv("DATABASE_URL")
 
