@@ -16,8 +16,8 @@ func NewExpenseService(expenseRepo *repositories.ExpenseRepository) *ExpenseServ
 	}
 }
 
-func (s *ExpenseService) GetUserExpensesWithStatus(subID string, status string) ([]models.Expense, error) {
-	return s.expenseRepo.GetUserExpensesWithStatus(subID, status)
+func (s *ExpenseService) GetUserExpenses(subID string, status string) ([]models.Expense, error) {
+	return s.expenseRepo.GetUserExpenses(subID, status)
 }
 
 func (s *ExpenseService) Create(expense *models.Expense) error {

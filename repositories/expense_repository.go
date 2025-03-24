@@ -22,10 +22,15 @@ func (r *ExpenseRepository) Get(id string) (*models.Expense, error) {
 	return &expense, err
 }
 
-func (r *ExpenseRepository) GetUserExpensesWithStatus(subID string, status string) ([]models.Expense, error) {
+func (r *ExpenseRepository) GetUserExpenses(subID string, status string) ([]models.Expense, error) {
 	var expenses []models.Expense
 
-	err := r.db.Where("(payer_sub_id = ? OR debtor_sub_id = ?) AND status = ?", subID, subID, status).Find(&expenses).Error
+	var err error
+	if status == "" {
+		err = r.db.Where("payer_sub_id = ? OR debtor_sub_id = ?", subID, subID).Find(&expenses).Error
+	} else {
+		err = r.db.Where("(payer_sub_id = ? OR debtor_sub_id = ?) AND status = ?", subID, subID, status).Find(&expenses).Error
+	}
 
 	return expenses, err
 }

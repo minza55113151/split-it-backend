@@ -56,7 +56,7 @@ func main() {
 	authGroup.Post("/friends/:subID", friendHandler.HandleCreateFriend)
 	authGroup.Delete("/friends/:subID", friendHandler.HandleDeleteFriend)
 
-	authGroup.Get("/expenses/:status", expenseHandler.HandleGetUserExpensesWithStatus)
+	authGroup.Get("/expenses", expenseHandler.HandleGetUserExpenses)
 	authGroup.Post("/expenses", expenseHandler.HandleCreateExpense)
 	authGroup.Put("/expenses/:id", expenseHandler.HandleUpdateExpense)
 	authGroup.Delete("/expenses/:id", expenseHandler.HandleDeleteExpense)

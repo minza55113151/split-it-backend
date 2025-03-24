@@ -22,16 +22,16 @@ func NewExpenseHandler(expenseService *services.ExpenseService) *ExpenseHandler 
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
-// @Param status path string true "Expense status"
+// @Param status query string false "Status"
 // @Success 200 {array} models.Expense
 // @Failure 500 {string} string
-// @Router /expenses/{status} [get]
-func (h *ExpenseHandler) HandleGetUserExpensesWithStatus(c *fiber.Ctx) error {
+// @Router /expenses [get]
+func (h *ExpenseHandler) HandleGetUserExpenses(c *fiber.Ctx) error {
 	usr := c.Locals(models.UserContextKey).(*clerk.User)
 	subID := usr.ID
-	status := c.Params("status")
+	status := c.Query("status")
 
-	expenses, err := h.expenseService.GetUserExpensesWithStatus(subID, status)
+	expenses, err := h.expenseService.GetUserExpenses(subID, status)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
 	}
