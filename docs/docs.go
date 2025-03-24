@@ -223,7 +223,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Friend"
+                                "$ref": "#/definitions/models.FriendResponse"
                             }
                         }
                     },
@@ -391,6 +391,52 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{name}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get users by name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get users by name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -432,22 +478,28 @@ const docTemplate = `{
                 }
             }
         },
-        "models.Friend": {
+        "models.FriendResponse": {
             "type": "object",
             "properties": {
                 "createdAt": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
+                },
+                "imageURL": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "string"
                 },
-                "subID1": {
-                    "type": "string"
-                },
-                "subID2": {
+                "subID": {
                     "type": "string"
                 },
                 "updatedAt": {
@@ -461,8 +513,17 @@ const docTemplate = `{
                 "createdAt": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
+                },
+                "imageURL": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 },
                 "subID": {
                     "type": "string"
@@ -487,7 +548,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "",
 	BasePath:         "",
-	Schemes:          []string{"http"},
+	Schemes:          []string{"http", "https"},
 	Title:            "Split-It API",
 	Description:      "This is a sample server for the Split-It application.",
 	InfoInstanceName: "swagger",

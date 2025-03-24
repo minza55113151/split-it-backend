@@ -46,7 +46,7 @@ func authMiddleware(c *fiber.Ctx) error {
 	}
 
 	fmt.Println(usr.ID) // TODO: remove this
-	c.Locals(models.SubIDContextKey, usr.ID)
+	c.Locals(models.UserContextKey, usr)
 
 	return c.Next()
 }

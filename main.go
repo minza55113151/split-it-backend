@@ -48,7 +48,9 @@ func main() {
 	authGroup.Use(authMiddleware)
 
 	authGroup.Get("/users", userHandler.HandleGetUser)
+	authGroup.Get("/users/:name", userHandler.GetUserByName)
 	authGroup.Post("/users", userHandler.HandleCreateUser)
+	authGroup.Put("/users", userHandler.HandleUpdateUser)
 
 	authGroup.Get("/friends", friendHandler.HandleGetFriends)
 	authGroup.Post("/friends/:subID", friendHandler.HandleCreateFriend)

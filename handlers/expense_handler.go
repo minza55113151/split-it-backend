@@ -4,6 +4,7 @@ import (
 	"split-it/models"
 	"split-it/services"
 
+	"github.com/clerk/clerk-sdk-go/v2"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -26,7 +27,8 @@ func NewExpenseHandler(expenseService *services.ExpenseService) *ExpenseHandler 
 // @Failure 500 {string} string
 // @Router /expenses/{status} [get]
 func (h *ExpenseHandler) HandleGetUserExpensesWithStatus(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
 	status := c.Params("status")
 
 	expenses, err := h.expenseService.GetUserExpensesWithStatus(subID, status)
@@ -48,7 +50,8 @@ func (h *ExpenseHandler) HandleGetUserExpensesWithStatus(c *fiber.Ctx) error {
 // @Failure 500 {string} string
 // @Router /expenses [post]
 func (h *ExpenseHandler) HandleCreateExpense(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
 
 	expense := new(models.Expense)
 	if err := c.BodyParser(expense); err != nil {
@@ -79,7 +82,8 @@ func (h *ExpenseHandler) HandleCreateExpense(c *fiber.Ctx) error {
 // @Failure 500 {string} string
 // @Router /expenses/{id} [put]
 func (h *ExpenseHandler) HandleUpdateExpense(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
 	id := c.Params("id")
 
 	expense := new(models.Expense)
@@ -110,7 +114,8 @@ func (h *ExpenseHandler) HandleUpdateExpense(c *fiber.Ctx) error {
 // @Failure 500 {string} string
 // @Router /expenses/{id} [delete]
 func (h *ExpenseHandler) HandleDeleteExpense(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
 	id := c.Params("id")
 
 	err := h.expenseService.Delete(id, subID)

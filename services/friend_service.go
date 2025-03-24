@@ -15,8 +15,21 @@ func NewFriendService(friendRepo *repositories.FriendRepository) *FriendService 
 	}
 }
 
-func (s *FriendService) GetFriends(subID string) ([]models.Friend, error) {
-	return s.friendRepo.GetFriends(subID)
+func (s *FriendService) GetFriends(subID string) ([]models.FriendResponse, error) {
+	friends, err := s.friendRepo.GetFriends(subID)
+	if err != nil {
+		return nil, err
+	}
+
+	for i := range friends {
+		if friends[i].SubID1 == subID {
+			friends[i].SubID = friends[i].SubID2
+		} else {
+			friends[i].SubID = friends[i].SubID1
+		}
+	}
+
+	return friends, nil
 }
 
 func (s *FriendService) CreateFriend(subID1, subID2 string) error {

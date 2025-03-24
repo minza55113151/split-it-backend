@@ -12,3 +12,17 @@ type Friend struct {
 	CreatedAt time.Time `gorm:"autoCreateTime"`
 	UpdatedAt time.Time `gorm:"autoUpdateTime"`
 }
+
+type FriendResponse struct {
+	ID        uint
+	SubID     string
+	SubID1    string `json:"-"`
+	SubID2    string `json:"-"`
+	Status    string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
+	Name     string
+	Email    string
+	ImageURL string
+}

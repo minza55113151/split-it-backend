@@ -4,6 +4,7 @@ import (
 	"split-it/models"
 	"split-it/services"
 
+	"github.com/clerk/clerk-sdk-go/v2"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,11 +22,12 @@ func NewFriendHandler(friendService *services.FriendService) *FriendHandler {
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
-// @Success 200 {array} models.Friend
+// @Success 200 {array} models.FriendResponse
 // @Failure 500 {string} string
 // @Router /friends [get]
 func (h *FriendHandler) HandleGetFriends(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
 
 	friends, err := h.friendService.GetFriends(subID)
 	if err != nil {
@@ -46,8 +48,13 @@ func (h *FriendHandler) HandleGetFriends(c *fiber.Ctx) error {
 // @Failure 500 {string} string
 // @Router /friends/{subID} [post]
 func (h *FriendHandler) HandleCreateFriend(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
 	friendSubID := c.Params("subID")
+
+	if subID == friendSubID {
+		return c.Status(fiber.StatusBadRequest).SendString("You cannot be friends with yourself")
+	}
 
 	err := h.friendService.CreateFriend(subID, friendSubID)
 	if err != nil {
@@ -68,7 +75,8 @@ func (h *FriendHandler) HandleCreateFriend(c *fiber.Ctx) error {
 // @Failure 500 {string} string
 // @Router /friends/{subID} [delete]
 func (h *FriendHandler) HandleDeleteFriend(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
 	friendSubID := c.Params("subID")
 
 	err := h.friendService.DeleteFriend(subID, friendSubID)

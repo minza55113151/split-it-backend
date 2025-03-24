@@ -3,7 +3,9 @@ package handlers
 import (
 	"split-it/models"
 	"split-it/services"
+	"strings"
 
+	"github.com/clerk/clerk-sdk-go/v2"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -26,7 +28,8 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 // @Failure 500 {string} string "Internal server error"
 // @Router /users [get]
 func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
 
 	user, err := h.UserService.GetUserBySubID(subID)
 	if err != nil {
@@ -39,6 +42,27 @@ func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(user)
 }
 
+// @Summary Get users by name
+// @Description Get users by name
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Param name path string true "User name"
+// @Success 200 {array} models.User
+// @Failure 500 {string} string "Internal server error"
+// @Router /users/{name} [get]
+func (h *UserHandler) GetUserByName(c *fiber.Ctx) error {
+	name := c.Params("name")
+
+	users, err := h.UserService.GetUsersByName(name)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
+	}
+
+	return c.Status(fiber.StatusOK).JSON(users)
+}
+
 // @Summary Create a new user
 // @Description Create a new user
 // @Tags users
@@ -49,12 +73,44 @@ func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 // @Failure 500 {string} string "Internal server error"
 // @Router /users [post]
 func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
-	subID := c.Locals(models.SubIDContextKey).(string)
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
+	name := ""
+	if usr.Username != nil {
+		name = *usr.Username
+	} else if usr.FirstName != nil {
+		name = *usr.FirstName
+	} else {
+		name = "Split-It User " + strings.TrimPrefix(subID, "user_")[0:4]
+	}
+	email := usr.EmailAddresses[0].EmailAddress
+	imageURL := usr.ImageURL
 
-	user, err := h.UserService.CreateUser(subID)
+	user, err := h.UserService.CreateUser(subID, name, email, *imageURL)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(user)
+}
+
+func (h *UserHandler) HandleUpdateUser(c *fiber.Ctx) error {
+	usr := c.Locals(models.UserContextKey).(*clerk.User)
+	subID := usr.ID
+
+	user := new(models.User)
+	if err := c.BodyParser(user); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
+
+	if user.SubID != subID {
+		return c.Status(fiber.StatusForbidden).SendString("Forbidden")
+	}
+
+	res, err := h.UserService.UpdateUser(user)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error()) // TODO: should return a more generic error message
+	}
+
+	return c.Status(fiber.StatusOK).JSON(res)
 }

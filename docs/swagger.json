@@ -1,6 +1,7 @@
 {
     "schemes": [
-        "http"
+        "http",
+        "https"
     ],
     "swagger": "2.0",
     "info": {
@@ -218,7 +219,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/models.Friend"
+                                "$ref": "#/definitions/models.FriendResponse"
                             }
                         }
                     },
@@ -386,6 +387,52 @@
                     }
                 }
             }
+        },
+        "/users/{name}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get users by name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Get users by name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -427,22 +474,28 @@
                 }
             }
         },
-        "models.Friend": {
+        "models.FriendResponse": {
             "type": "object",
             "properties": {
                 "createdAt": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
+                },
+                "imageURL": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 },
                 "status": {
                     "type": "string"
                 },
-                "subID1": {
-                    "type": "string"
-                },
-                "subID2": {
+                "subID": {
                     "type": "string"
                 },
                 "updatedAt": {
@@ -456,8 +509,17 @@
                 "createdAt": {
                     "type": "string"
                 },
+                "email": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
+                },
+                "imageURL": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 },
                 "subID": {
                     "type": "string"
