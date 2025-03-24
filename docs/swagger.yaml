@@ -67,6 +67,33 @@ info:
   version: "1.0"
 paths:
   /expenses:
+    get:
+      consumes:
+      - application/json
+      description: Get user expenses with status
+      parameters:
+      - description: Status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Expense'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get user expenses with status
+      tags:
+      - expenses
     post:
       consumes:
       - application/json
@@ -151,35 +178,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update expense
-      tags:
-      - expenses
-  /expenses/{status}:
-    get:
-      consumes:
-      - application/json
-      description: Get user expenses with status
-      parameters:
-      - description: Expense status
-        in: path
-        name: status
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Expense'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: Get user expenses with status
       tags:
       - expenses
   /friends:
