@@ -8,19 +8,22 @@ import (
 	_ "split-it/docs"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/swagger"
 )
 
 // @title Split-It API
 // @description This is a sample server for the Split-It application.
 // @version 1.0
-// @schemes http
+// @schemes http https
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
 func main() {
 
 	app := fiber.New()
+
+	app.Use(cors.New())
 
 	db := initDB()
 	initAuth()
