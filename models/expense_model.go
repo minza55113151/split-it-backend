@@ -9,6 +9,7 @@ type Expense struct {
 	DebtorSubID string  `gorm:"not null"`
 	Title       string  `gorm:"not null"`
 	Amount      float64 `gorm:"not null"`
+	SplitType   string  `gorm:"not null"`
 	Icon        string  `gorm:"not null"`
 	Currency    string  `gorm:"not null"`
 	Note        string  `gorm:"not null"`

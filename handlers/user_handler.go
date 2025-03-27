@@ -94,6 +94,16 @@ func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(user)
 }
 
+// @Summary Update a user
+// @Description Update a user
+// @Tags users
+// @Accept json
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} models.User
+// @Failure 403 {string} string "Forbidden"
+// @Failure 500 {string} string "Internal server error"
+// @Router /users [put]
 func (h *UserHandler) HandleUpdateUser(c *fiber.Ctx) error {
 	usr := c.Locals(models.UserContextKey).(*clerk.User)
 	subID := usr.ID

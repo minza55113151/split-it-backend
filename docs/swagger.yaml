@@ -17,6 +17,8 @@ definitions:
         type: string
       payerSubID:
         type: string
+      splitType:
+        type: string
       status:
         type: string
       title:
@@ -299,6 +301,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Create a new user
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update a user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "403":
+          description: Forbidden
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update a user
       tags:
       - users
   /users/{name}:
