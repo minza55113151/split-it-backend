@@ -100,6 +100,7 @@ func (h *UserHandler) HandleCreateUser(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Security ApiKeyAuth
+// @Param user body models.User true "User object"
 // @Success 200 {object} models.User
 // @Failure 403 {string} string "Forbidden"
 // @Failure 500 {string} string "Internal server error"

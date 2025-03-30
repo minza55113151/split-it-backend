@@ -373,6 +373,17 @@ const docTemplate = `{
                     "users"
                 ],
                 "summary": "Update a user",
+                "parameters": [
+                    {
+                        "description": "User object",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.User"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

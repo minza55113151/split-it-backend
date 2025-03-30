@@ -307,6 +307,13 @@ paths:
       consumes:
       - application/json
       description: Update a user
+      parameters:
+      - description: User object
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
       produces:
       - application/json
       responses:
